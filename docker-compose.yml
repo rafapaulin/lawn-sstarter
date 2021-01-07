@@ -24,8 +24,7 @@ services:
           - no_proxy
       volumes:
         - ./laradock/php-fpm/php${PHP_VERSION}.ini:/usr/local/etc/php/php.ini
-        - ${APP_CODE_PATH_HOST}web:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
-        - ${APP_CODE_PATH_HOST}vendor:${APP_CODE_PATH_CONTAINER}/vendor${APP_CODE_CONTAINER_FLAG}
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
       expose:
         - "9000"
       networks:
@@ -42,8 +41,7 @@ services:
           - https_proxy
           - no_proxy
       volumes:
-        - ${APP_CODE_PATH_HOST}/web:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
-        - ${APP_CODE_PATH_HOST}vendor:${APP_CODE_PATH_CONTAINER}/vendor${APP_CODE_CONTAINER_FLAG}
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ${NGINX_HOST_LOG_PATH}:/var/log/nginx
         - ${NGINX_SITES_PATH}:/etc/nginx/sites-available
         - ${NGINX_SSL_PATH}:/etc/nginx/ssl
@@ -83,9 +81,8 @@ services:
           - LARADOCK_PHP_VERSION=${PHP_VERSION}
           - INSTALL_MYSQL_CLIENT=true
       volumes:
-        - ${APP_CODE_PATH_HOST}worker:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
-        - ${APP_CODE_PATH_HOST}vendor:${APP_CODE_PATH_CONTAINER}/vendor${APP_CODE_CONTAINER_FLAG}
-        - ./worker/supervisord.d:/etc/supervisord.d
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - ./worker:/etc/supervisord.d
       depends_on:
         - sqs
       networks:
@@ -98,9 +95,8 @@ services:
         args:
           - LARADOCK_PHP_VERSION=${PHP_VERSION}
       volumes:
-        - ${APP_CODE_PATH_HOST}scheduler:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
-        - ${APP_CODE_PATH_HOST}vendor:${APP_CODE_PATH_CONTAINER}/vendor${APP_CODE_CONTAINER_FLAG}
-        - ./scheduler/supervisord.d:/etc/supervisord.d
+        - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+        - ./scheduler:/etc/supervisord.d
       depends_on:
         - sqs
       networks:
@@ -108,7 +104,7 @@ services:
 
 ### SQS #############################################
     sqs:
-      build: 
+      build:
         context: ./laradock/sqs
       ports:
         - "${SQS_NODE_HOST_PORT}:9324"

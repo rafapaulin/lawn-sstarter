@@ -22,11 +22,7 @@
         }
     },
     "autoload-dev": {
-        "classmap": [
-            "web/tests/",
-            "scheduler/tests/",
-            "worker/tests/"
-        ]
+        "classmap": [ "tests/" ]
     },
     "config": {
         "preferred-install": "dist",
