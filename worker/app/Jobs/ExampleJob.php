@@ -2,16 +2,15 @@
 
 namespace App\Jobs;
 
-class ExampleJob extends Job
-{
+use Illuminate\Support\Facades\Log;
+
+class ExampleJob extends Job {
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
+    public function __construct() { 
     }
 
     /**
@@ -19,8 +18,7 @@ class ExampleJob extends Job
      *
      * @return void
      */
-    public function handle()
-    {
-        //
+    public function handle() {
+        Log::debug('job done on worker!');
     }
 }

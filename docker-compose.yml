@@ -1,14 +1,12 @@
 version: '3.5'
 
 networks:
-  frontend:
-    driver: ${NETWORKS_DRIVER}
+  # frontend:
+  #   driver: ${NETWORKS_DRIVER}
   backend:
     driver: ${NETWORKS_DRIVER}
 volumes:
   mysql:
-    driver: ${VOLUMES_DRIVER}
-  redis:
     driver: ${VOLUMES_DRIVER}
 services:
 
@@ -88,6 +86,8 @@ services:
         - ${APP_CODE_PATH_HOST}worker:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ${APP_CODE_PATH_HOST}vendor:${APP_CODE_PATH_CONTAINER}/vendor${APP_CODE_CONTAINER_FLAG}
         - ./worker/supervisord.d:/etc/supervisord.d
+      depends_on:
+        - sqs
       networks:
         - backend
 
@@ -101,6 +101,8 @@ services:
         - ${APP_CODE_PATH_HOST}scheduler:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ${APP_CODE_PATH_HOST}vendor:${APP_CODE_PATH_CONTAINER}/vendor${APP_CODE_CONTAINER_FLAG}
         - ./scheduler/supervisord.d:/etc/supervisord.d
+      depends_on:
+        - sqs
       networks:
         - backend
 
@@ -114,6 +116,7 @@ services:
       privileged: true
       hostname: laradock-sqs
       volumes:
-        - ${DATA_PATH_HOST}/sqs:/opt/custom
+        - ${APP_CODE_PATH_HOST}sqs:/opt/custom
+        - ${APP_CODE_PATH_HOST}sqs/sqs-insight.conf:/opt/config/sqs-insight.conf
       networks:
         - backend

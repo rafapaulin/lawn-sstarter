@@ -2,6 +2,7 @@
 
 namespace App\Console;
 
+use App\Jobs\ExampleJob;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 
@@ -22,8 +23,7 @@ class Kernel extends ConsoleKernel
      * @param  \Illuminate\Console\Scheduling\Schedule  $schedule
      * @return void
      */
-    protected function schedule(Schedule $schedule)
-    {
-        //
+    protected function schedule(Schedule $schedule) {
+        $schedule->job(new ExampleJob, 'statistics-calc')->everyMinute();
     }
 }

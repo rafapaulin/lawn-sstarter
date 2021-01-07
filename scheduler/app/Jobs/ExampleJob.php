@@ -2,16 +2,18 @@
 
 namespace App\Jobs;
 
-class ExampleJob extends Job
-{
+use Illuminate\Support\Facades\Log;
+
+class ExampleJob extends Job {
+    private $origin;
+
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
+    public function __construct() {
+        $this->origin = 'scheduler';
     }
 
     /**
@@ -19,8 +21,7 @@ class ExampleJob extends Job
      *
      * @return void
      */
-    public function handle()
-    {
-        //
+    public function handle() {
+        Log::debug('Scheduler job is done!');
     }
 }
