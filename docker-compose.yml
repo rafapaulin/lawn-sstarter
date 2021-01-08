@@ -84,7 +84,7 @@ services:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ./worker:/etc/supervisord.d
       depends_on:
-        - sqs
+        - redis
       networks:
         - backend
 
@@ -98,21 +98,17 @@ services:
         - ${APP_CODE_PATH_HOST}:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
         - ./scheduler:/etc/supervisord.d
       depends_on:
-        - sqs
+        - redis
       networks:
         - backend
 
-### SQS #############################################
-    sqs:
+### Redis ################################################
+    redis:
       build:
-        context: ./laradock/sqs
-      ports:
-        - "${SQS_NODE_HOST_PORT}:9324"
-        - "${SQS_MANAGEMENT_HTTP_HOST_PORT}:9325"
-      privileged: true
-      hostname: laradock-sqs
+        context: ./laradock/redis
       volumes:
-        - ${APP_CODE_PATH_HOST}sqs:/opt/custom
-        - ${APP_CODE_PATH_HOST}sqs/sqs-insight.conf:/opt/config/sqs-insight.conf
+        - ${DATA_PATH_HOST}/redis:/data
+      ports:
+        - "${REDIS_PORT}:6379"
       networks:
         - backend

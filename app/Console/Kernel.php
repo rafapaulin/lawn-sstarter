@@ -24,6 +24,6 @@ class Kernel extends ConsoleKernel
      * @return void
      */
     protected function schedule(Schedule $schedule) {
-        $schedule->job(new ExampleJob, 'statistics-calc')->everyMinute();
+        // $schedule->job(new ExampleJob)->everyMinute();
     }
 }

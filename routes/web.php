@@ -17,6 +17,4 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-$router->get('stats', [
-    'uses' => 'ExampleController@test',
-]);
+$router->get('sw-data/{path:.*}', ['uses' => 'SwController@swApi']);
