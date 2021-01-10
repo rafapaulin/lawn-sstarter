@@ -1,8 +1,8 @@
 version: '3.5'
 
 networks:
-  # frontend:
-  #   driver: ${NETWORKS_DRIVER}
+  frontend:
+    driver: ${NETWORKS_DRIVER}
   backend:
     driver: ${NETWORKS_DRIVER}
 volumes:
@@ -10,7 +10,7 @@ volumes:
     driver: ${VOLUMES_DRIVER}
 services:
 
-### PHP-FPM ##############################################
+### PHP-FPM ##################################################
     php-fpm:
       build:
         context: ./laradock/php-fpm
@@ -28,9 +28,10 @@ services:
       expose:
         - "9000"
       networks:
+        - frontend
         - backend
 
-### NGINX Server #########################################
+### NGINX Server #############################################
     nginx:
       build:
         context: ./laradock/nginx
@@ -53,7 +54,7 @@ services:
       networks:
         - backend
 
-### MySQL ################################################
+### MySQL ####################################################
     mysql:
       build:
         context: ./laradock/mysql
@@ -73,7 +74,7 @@ services:
       networks:
         - backend
 
-### PHP Worker ############################################
+### PHP Worker ###############################################
     worker:
       build:
         context: ./laradock/php-worker
@@ -102,7 +103,7 @@ services:
       networks:
         - backend
 
-### Redis ################################################
+### Redis ####################################################
     redis:
       build:
         context: ./laradock/redis
@@ -111,4 +112,23 @@ services:
       ports:
         - "${REDIS_PORT}:6379"
       networks:
+        - backend
+
+### Frontend #################################################
+    frontend:
+      build:
+        context: ./laradock/workspace
+        args:
+          - INSTALL_NODE=${WORKSPACE_INSTALL_NODE}
+          - INSTALL_NPM_VUE_CLI=${WORKSPACE_INSTALL_NPM_VUE_CLI}
+          - LARADOCK_PHP_VERSION=${PHP_VERSION}
+      volumes:
+        - ${APP_CODE_PATH_HOST}frontend:${APP_CODE_PATH_CONTAINER}${APP_CODE_CONTAINER_FLAG}
+      extra_hosts:
+        - "dockerhost:${DOCKER_HOST_IP}"
+      ports:
+        - "${WORKSPACE_VUE_CLI_SERVE_HOST_PORT}:8080"
+      command: npm run serve
+      networks:
+        - frontend
         - backend

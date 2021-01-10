@@ -25,7 +25,7 @@ $app = new Laravel\Lumen\Application(
 
 $app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -62,6 +62,7 @@ $app->singleton(
 $app->configure('app');
 $app->configure('database');
 $app->configure('queue');
+$app->configure('cors');
 
 /*
 |--------------------------------------------------------------------------
@@ -73,7 +74,9 @@ $app->configure('queue');
 | route or middleware that'll be assigned to some specific routes.
 |
 */
-
+$app->middleware([
+    App\Http\Middleware\Cors::class
+]);
 // $app->middleware([
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);

@@ -18,3 +18,4 @@ $router->get('/', function () use ($router) {
 });
 
 $router->get('sw-data/{path:.*}', ['uses' => 'SwController@swApi']);
+$router->get('statistics', ['uses' => 'StatisticsController@stats']);
